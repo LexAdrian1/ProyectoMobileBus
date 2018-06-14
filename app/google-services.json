@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "771262421876",
+    "firebase_url": "https://proyectomoviles-1528484545458.firebaseio.com",
+    "project_id": "proyectomoviles-1528484545458",
+    "storage_bucket": "proyectomoviles-1528484545458.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771262421876:android:010d58e8db3d9f9c",
+        "android_client_info": {
+          "package_name": "com.example.toshibask.myapplicationbus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771262421876-urieg982so6eqthiolp12f2qf0i8vbgt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toshibask.myapplicationbus",
+            "certificate_hash": "2720e26539c01e2c0f4b3696336d5efb1481239f"
+          }
+        },
+        {
+          "client_id": "771262421876-r53omrbqvj3npdq6hdup6nh6demvblsh.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "771262421876-r53omrbqvj3npdq6hdup6nh6demvblsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Q3WP9MlQCqq1FOk09PkaKoW8BgEoYXc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771262421876-r53omrbqvj3npdq6hdup6nh6demvblsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
