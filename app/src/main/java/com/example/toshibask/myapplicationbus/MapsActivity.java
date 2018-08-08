@@ -1,8 +1,12 @@
 package com.example.toshibask.myapplicationbus;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.nfc.cardemulation.HostNfcFService;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,18 +50,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<LatLng> polylineList;
     private Marker marker;
     private float v;
-    private double lat,lng;
+    private double lat, lng;
     private Handler handler;
-    private LatLng startPosition,endPosition;
-    private int index,next;
+    private LatLng startPosition, endPosition;
+    private int index, next;
     private Button btnGo;
     private EditText edtPlace;
     private String destination;
-    private PolylineOptions polylineOptions,blackPolylineOptions;
-    private Polyline blackPolyline,greyPolyline;
+    private PolylineOptions polylineOptions, blackPolylineOptions;
+    private Polyline blackPolyline, greyPolyline;
     private LatLng myLocation;
     IGoogleApi mService;
-
 
 
     @Override
@@ -67,23 +70,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         polylineList = new ArrayList<>();
-        btnGo = (Button)findViewById(R.id.btnSearch);
-        edtPlace = (EditText)findViewById(R.id.edtPlace);
-        btnGo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                destination = edtPlace.getText().toString();
-                destination = destination.replace(" ","+");//URL
-                mapFragment.getMapAsync(MapsActivity.this);
-            }
-        });
+        mapFragment.getMapAsync(MapsActivity.this);
 
         mService = Common.getGoogleApi();
     }
-
 
 
     @Override
@@ -94,25 +85,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setTrafficEnabled(false);
         mMap.setIndoorEnabled(false);
         mMap.setBuildingsEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
 
         // Add a marker in Sydney and move the camera
-        final LatLng sydney = new LatLng(16.0659970, 108.212552);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Mi Ubicacion"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        final LatLng epn = new LatLng(-0.210370,  -78.489120);
+        mMap.addMarker(new MarkerOptions().position(epn).title("Escuela Politecnica Nacional"));
+        final LatLng quicentro = new LatLng(-0.17611094405541, -78.48099753793139);
+        mMap.addMarker(new MarkerOptions().position(quicentro).title("Quicentro Shopping"));
+        final LatLng cato = new LatLng(-0.-0.208739772610497,  -78.49152624607086);
+        mMap.addMarker(new MarkerOptions().position(cato).title("Av. 12 de Octubre y Catolica"));
+        final LatLng gaso = new LatLng(-0.17472941284265034,  -78.48798629641385);
+        mMap.addMarker(new MarkerOptions().position(epn).title("Gasolinera 10 de Agosto"));
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(epn));
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(googleMap.getCameraPosition().target)
-        .zoom(17)
+        .zoom(12)
                 .bearing(30)
                 .tilt(45)
                 .build()));
-            String requestUrl = null;
+        String requestUrl = null;
+
             try{
                 requestUrl = "https://maps.googleapis.com/maps/api/directions/json?"+
                 "mode=driving&"+
                 "transit_routing_preference=less_driving&"+
-                "origin="+sydney.latitude+","+sydney.longitude+"&"+
-                "destination="+destination+"&"+
+                "origin="+quicentro.latitude+","+quicentro.longitude+"&"+
+                "destination="+cato.latitude+","+cato.longitude+"&"+
                 "key="+getResources().getString(R.string.google_directions_key);
                 Log.d("URL",requestUrl);//Print url to review by Chrome
                 mService.getDataFromGoogleApi(requestUrl)
@@ -174,7 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     });
                                     polylineAnimator.start();
                                     //Añadir marca carro
-                                    marker = mMap.addMarker(new MarkerOptions().position(sydney)
+                                    marker = mMap.addMarker(new MarkerOptions().position(epn)
                                             .flat(true)
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
                                     //Moviento Carro
@@ -194,7 +199,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             }
 
                                             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0,1);
-                                            valueAnimator.setDuration(1000); //
+                                            valueAnimator.setDuration(3000); //
                                             valueAnimator.setInterpolator(new LinearInterpolator());
                                             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                                 @Override
@@ -208,16 +213,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                     marker.setPosition(newPos);
                                                     marker.setAnchor(0.5f,0.5f);
                                                     marker.setRotation(getBearing(startPosition,newPos));
-                                                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                                                    /*mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
                                                             .target(newPos)
                                                     .zoom(15.5f)
-                                                    .build()));
+                                                    .build()));*/
                                                 }
                                             });
                                             valueAnimator.start();
                                             handler.postDelayed(this,1000);
                                         }
-                                    },1000);//Tiempo De Movimiento
+                                    },4000);//Tiempo De Movimiento
 
 
                                 }catch (Exception e){
@@ -235,7 +240,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             catch (Exception e){
                 e.printStackTrace();
             }
+
+
+        try{
+            requestUrl = "https://maps.googleapis.com/maps/api/directions/json?"+
+                    "mode=driving&"+
+                    "transit_routing_preference=less_driving&"+
+                    "origin="+epn.latitude+","+epn.longitude+"&"+
+                    "destination="+gaso.latitude+","+gaso.longitude+"&"+
+                    "key="+getResources().getString(R.string.google_directions_key);
+            Log.d("URL",requestUrl);//Print url to review by Chrome
+            mService.getDataFromGoogleApi(requestUrl)
+                    .enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+
+                            try{
+                                JSONObject jsonObject = new JSONObject(response.body().toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                                for(int i=0;i<jsonArray.length();i++){
+                                    JSONObject route = jsonArray.getJSONObject(i);
+                                    JSONObject poly = route.getJSONObject("overview_polyline");
+                                    String polyline = poly.getString("points");
+                                    polylineList = decodePoly(polyline);
+
+                                }
+                                //Adjusting Limites
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                for(LatLng latLng:polylineList)
+                                    builder.include(latLng);
+                                LatLngBounds bounds = builder.build();
+                                CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds,2);
+                                mMap.animateCamera(mCameraUpdate);
+
+                                polylineOptions = new PolylineOptions();
+                                polylineOptions.color(Color.RED);
+                                polylineOptions.width(7);
+                                polylineOptions.startCap(new SquareCap());
+                                polylineOptions.endCap(new SquareCap());
+                                polylineOptions.jointType(JointType.ROUND);
+                                polylineOptions.addAll(polylineList);
+                                greyPolyline = mMap.addPolyline(polylineOptions);
+
+                                mMap.addMarker(new MarkerOptions().position(polylineList.get(polylineList.size()-1)));
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Toast.makeText(MapsActivity.this,""+t.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
+
 
     private float getBearing(LatLng startPosition, LatLng newPos) {
         double lat = Math.abs(startPosition.latitude - newPos.latitude);
