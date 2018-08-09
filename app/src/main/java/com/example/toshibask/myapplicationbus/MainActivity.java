@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,MapsActivity.class);
                 startActivity(intent);
             }
-        },3000);
+        },500);
     }
 
     /*public void openMap(View view){
